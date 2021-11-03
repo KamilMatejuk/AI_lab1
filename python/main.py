@@ -24,8 +24,20 @@ def heuristic1(puzzle: Puzzle):
             expected_x = (p - 1) % Puzzle.SIZE
             expected_y = int((p - 1) / Puzzle.SIZE)
             distances += abs(current_x - expected_x) + abs(current_y - expected_y)
-    
-    
+    return Puzzle.SIZE * distances
+
+def heuristic2(puzzle: Puzzle):
+    # distance to target for each cell, but importance lowers starting from 1 to 15
+    distances = 0
+    for current_y, row in enumerate(puzzle.positions):
+        for current_x, p in enumerate(row):
+            if p == 0:
+                p = Puzzle.SIZE ** 2
+            expected_x = (p - 1) % Puzzle.SIZE
+            expected_y = int((p - 1) / Puzzle.SIZE)
+            importance = Puzzle.SIZE ** 2 - p
+            d = abs(current_x - expected_x) + abs(current_y - expected_y)
+            distances += importance * d
     return Puzzle.SIZE * distances
 
 # def heuristic2(puzzle: Puzzle):
