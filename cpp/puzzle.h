@@ -1,13 +1,14 @@
 #include <string>
+#include <vector>
 using namespace std;
 
 
-class Direction {
-    public:
-        const int LEFT[2]  = {-1,  0};
-        const int RIGHT[2] = {1, 0};
-        const int UP[2]    = {0, -1};
-        const int DOWN[2]  = {0, 1};
+enum Direction {
+    // angle from vertical
+    UP    = 0,
+    RIGHT = 90,
+    DOWN  = 180,
+    LEFT  = 270
 };
 
 class Puzzle {
@@ -23,7 +24,9 @@ class Puzzle {
 
     Puzzle();
     string short_state_repr();
-    bool swap(int direction[2]);
+    bool swap(Direction direction);
     void shuffle(int n);
-
+    vector<Direction> get_possible_moves();
+    bool is_finished();
+    void show();
 };

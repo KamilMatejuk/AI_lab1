@@ -9,3 +9,27 @@ Puzzle::Puzzle() {
         }
     }
 };
+
+string Puzzle::short_state_repr() {
+
+}
+
+bool Puzzle::swap(Direction direction) {
+
+}
+
+void Puzzle::shuffle(int n) {
+
+}
+
+vector<Direction> Puzzle::get_possible_moves() {
+
+}
+
+bool Puzzle::is_finished() {
+
+}
+
+void Puzzle::show() {
+
+}
