@@ -10,13 +10,12 @@ class Solver {
     public:
         vector<Puzzle> visited_states;
         vector<Puzzle> states_to_visit;
-        Puzzle solution = Puzzle(0);
-        Solver();
-        void solve();
-        DataMap get_data();
-
-    private:
-        int heuristic;
+        Puzzle solution;
+        double solving_time = 0;
         time_t start_time;
-        double solving_time;
+        
+        Solver(Puzzle puzzle);
+        int heuristic(int number_of_heuristic, Puzzle puzzle);
+        void solve(int number_of_heuristic);
+        DataMap get_data();
 };

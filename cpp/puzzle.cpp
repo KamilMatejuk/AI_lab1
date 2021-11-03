@@ -3,6 +3,7 @@
 #include <iomanip>
 #include <string>
 #include <cmath>
+using namespace std;
 
 
 string get_direction_name(Direction d) {
@@ -16,8 +17,7 @@ string get_direction_name(Direction d) {
     return name;
 }
 
-Puzzle::Puzzle(int _id) {
-    id = _id;
+Puzzle::Puzzle() {
     // create starting positions
     for (int i = 0; i < SIZE; i++) {
         for (int j = 0; j < SIZE; j++) {
@@ -30,8 +30,41 @@ Puzzle::Puzzle(int _id) {
     cout << short_state_repr() << endl;
     // shuffle
     shuffle(pow(SIZE, 4));
-    solution_path_length = 0;
+    solution_path = {};
 };
+
+Puzzle::Puzzle(bool _shuffle) {
+    // create starting positions
+    for (int i = 0; i < SIZE; i++) {
+        for (int j = 0; j < SIZE; j++) {
+            positions[i][j] = SIZE * i + j + 1;
+        }
+    }
+    empty_x = SIZE - 1;
+    empty_y = SIZE - 1;
+    positions[empty_y][empty_x] = 0;
+    cout << short_state_repr() << endl;
+    // shuffle
+    if (_shuffle) {
+        shuffle(pow(SIZE, 4));
+    }
+    solution_path = {};
+};
+
+Puzzle Puzzle::copy() {
+    Puzzle p = Puzzle(false);
+    for (int i = 0; i < SIZE; i++) {
+        for (int j = 0; j < SIZE; j++) {
+            p.positions[i][j] = positions[i][j];
+        }
+    }
+    p.empty_x = empty_x;
+    p.empty_y = empty_y;
+    for (Direction d : solution_path) {
+        p.solution_path.push_back(d);
+    }
+    return p;
+}
 
 string Puzzle::short_state_repr() {
     string repr = "";
@@ -64,8 +97,7 @@ bool Puzzle::swap(Direction direction) {
              ")" << endl;
     empty_x = x;
     empty_y = y;
-    solution_path_length++;
-    // TODO save path to the file
+    solution_path.push_back(direction);
     return true;
 }
 
