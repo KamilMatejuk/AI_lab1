@@ -14,11 +14,10 @@ private:
   Puzzle()
   {
     // positions = new int[SIZE][SIZE]{ 1};
-    for (int i = 0; i < SIZE; i++)
-    {
-      /* code */
+    for (int i = 0; i < SIZE; i++) {
+      for (int j = 0; j < SIZE; j++) {
+        positions[i][j] = SIZE * i + j + 1;
+      }
     }
-
-    positions = {1};
   }
 };
