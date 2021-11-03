@@ -7,6 +7,6 @@
 using namespace std;
 
 int main() {
-    cout << "test" <<endl;
+    cout << section_name("test") << endl;
     return 0;
 }
