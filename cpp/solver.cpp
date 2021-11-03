@@ -25,9 +25,7 @@ void Solver::solve(int number_of_heuristic) {
         // find nodes with least f
         int min_f = numeric_limits<int>::infinity();
         Puzzle min_state = Puzzle();
-        // for (Puzzle state : states_to_visit) {
-        for (int i = 0; i < states_to_visit.size(); i++) {
-            Puzzle state = states_to_visit[i];
+        for (Puzzle state : states_to_visit) {
             int h = heuristic(number_of_heuristic, state);
             int g = state.solution_path.size();
             int f = g + h;
@@ -39,9 +37,15 @@ void Solver::solve(int number_of_heuristic) {
         cout << "Found minimal state " << min_state.short_state_repr() << \
                 " -> f = g + h = " << min_f << endl;
         // pop off list
-        cout << states_to_visit.size() << endl;
-        // states_to_visit.erase(remove(states_to_visit.begin(), states_to_visit.end(), min_state), states_to_visit.end());
-        cout << states_to_visit.size() << endl;
+        int index = -1;
+        for (int i = 0; i < states_to_visit.size(); i++) {
+            if (states_to_visit[i] == min_state) {
+                index = i;
+            }
+        }
+        if (index != -1) {
+            states_to_visit.erase(states_to_visit.begin() + index);
+        }
         // for each successor
         for (Direction move : min_state.get_possible_moves()) {
             Puzzle succ = min_state.copy();
@@ -63,9 +67,7 @@ void Solver::solve(int number_of_heuristic) {
             int succ_f = succ.solution_path.size() + heuristic(number_of_heuristic, succ);
             // check if already in list to visit with lower value
             bool already_exists_with_lower_f = false;
-            // for (Puzzle state : states_to_visit) {
-            for (int i = 0; i < states_to_visit.size(); i++) {
-                Puzzle state = states_to_visit[i];
+            for (Puzzle state : states_to_visit) {
                 if (state.short_state_repr() == succ.short_state_repr()) {
                     int state_f = state.solution_path.size() + heuristic(number_of_heuristic, state);
                     if (state_f < succ_f) {
@@ -79,9 +81,7 @@ void Solver::solve(int number_of_heuristic) {
             }
             // check if already visited with lower value
             already_exists_with_lower_f = false;
-            // for (Puzzle state : visited_states) {
-            for (int i = 0; i < visited_states.size(); i++) {
-                Puzzle state = visited_states[i];
+            for (Puzzle state : visited_states) {
                 if (state.short_state_repr() == succ.short_state_repr()) {
                     int state_f = state.solution_path.size() + heuristic(number_of_heuristic, state);
                     if (state_f < succ_f) {

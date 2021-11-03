@@ -1,5 +1,4 @@
 #include "utils.h"
-#include <curses.h>
 #include <string>
 
 

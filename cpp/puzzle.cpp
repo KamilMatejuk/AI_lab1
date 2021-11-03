@@ -27,7 +27,6 @@ Puzzle::Puzzle() {
     empty_x = SIZE - 1;
     empty_y = SIZE - 1;
     positions[empty_y][empty_x] = 0;
-    cout << short_state_repr() << endl;
     // shuffle
     shuffle(pow(SIZE, 4));
     solution_path = {};
@@ -43,13 +42,32 @@ Puzzle::Puzzle(bool _shuffle) {
     empty_x = SIZE - 1;
     empty_y = SIZE - 1;
     positions[empty_y][empty_x] = 0;
-    cout << short_state_repr() << endl;
     // shuffle
     if (_shuffle) {
         shuffle(pow(SIZE, 4));
     }
     solution_path = {};
 };
+
+bool operator== (const Puzzle &p1, const Puzzle &p2) {
+    for (int i = 0; i < Puzzle::SIZE; i++) {
+        for (int j = 0; j < Puzzle::SIZE; j++) {
+            if (p1.positions[i][j] != p2.positions[i][j]) {
+                return false;
+            }
+        }
+    }
+    if (p1.empty_x != p2.empty_x) {
+        return false;
+    }
+    if (p1.empty_y != p2.empty_y) {
+        return false;
+    }
+    if (p1.solution_path != p2.solution_path) {
+        return false;
+    }
+    return true;
+}
 
 Puzzle Puzzle::copy() {
     Puzzle p = Puzzle(false);
@@ -92,9 +110,9 @@ bool Puzzle::swap(Direction direction) {
     // swap
     positions[empty_y][empty_x] = positions[y][x];
     positions[y][x] = 0;
-    cout << "Swapped (" + to_string(empty_x) + ", " + to_string(empty_y) + ") " +\
-            get_direction_name(direction) + " to (" + to_string(x) + ", " + to_string(y) +\
-             ")" << endl;
+    // cout << "Swapped (" + to_string(empty_x) + ", " + to_string(empty_y) + ") " +\
+    //         get_direction_name(direction) + " to (" + to_string(x) + ", " + to_string(y) +\
+    //          ")" << endl;
     empty_x = x;
     empty_y = y;
     solution_path.push_back(direction);

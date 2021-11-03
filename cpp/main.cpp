@@ -5,17 +5,15 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <ctime>
 using namespace std;
 
 int main() {
+    srand(time(NULL));
     // TODO dodać logi
     int number_of_iterations = 1;
     int number_of_heuristics = 2;
     map<string, DataMap> results;
-
-    Puzzle p = Puzzle();
-    p.show();
-    return 0;
     
     for (int i = 0; i < number_of_iterations; i++) {
         cout << iteration_name("Running test " + to_string(i + 1)) << endl;
