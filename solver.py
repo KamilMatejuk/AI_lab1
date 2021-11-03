@@ -34,7 +34,7 @@ class Solver():
             # for each successor:
             next_moves = min_state.get_possible_moves()
             for move in next_moves:
-                print(f'Checking successor after move {move}')
+                # print(f'Checking successor after move {move}')
                 succ = copy.deepcopy(min_state)
                 succ.puzzle_swap(move)
                 # check if finished
@@ -45,7 +45,7 @@ class Solver():
                     return
                 # f = g + h
                 succ_f  = len(succ.solution_path)  + self.heuristic(succ)
-                print(f'After move f = {succ_f}')
+                # print(f'After move f = {succ_f}')
                 
                 # check if already in list to visit with lower value
                 already_exists_with_lower_f = False
@@ -55,7 +55,7 @@ class Solver():
                         if state_f < succ_f:
                             already_exists_with_lower_f = True
                             break
-                print(f'Checking if already exists with lower f in open list -> {already_exists_with_lower_f}')
+                # print(f'Checking if already exists with lower f in open list -> {already_exists_with_lower_f}')
                 if already_exists_with_lower_f:
                     continue
                 # check if already visited with lower value
@@ -66,12 +66,12 @@ class Solver():
                         if state_f < succ_f:
                             already_exists_with_lower_f = True
                             break
-                print(f'Checking if already exists with lower f in closed list -> {already_exists_with_lower_f}')
+                # print(f'Checking if already exists with lower f in closed list -> {already_exists_with_lower_f}')
                 if already_exists_with_lower_f:
                     continue
                 # otherwise add to list
                 self.states_to_visit.append(succ)
-                print(f'Added {succ.short_state_repr()} to the open list')
+                # print(f'Added {succ.short_state_repr()} to the open list')
             self.visited_states.append(min_state)
             del move, min_state, already_exists_with_lower_f
             
