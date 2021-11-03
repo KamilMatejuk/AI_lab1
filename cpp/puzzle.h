@@ -1,7 +1,9 @@
+#pragma once
 #include <string>
 #include <vector>
 using namespace std;
 
+static const float PI = 3.14159;
 
 enum Direction {
     // angle from vertical
@@ -11,10 +13,12 @@ enum Direction {
     LEFT  = 270
 };
 
+string get_direction_name(Direction d);
+
 class Puzzle {
     public:
         static const int SIZE = 4;
-        Puzzle();
+        Puzzle(int _id);
         string short_state_repr();
         bool swap(Direction direction);
         void shuffle(int n);

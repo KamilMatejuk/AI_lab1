@@ -12,5 +12,5 @@ void Solver::solve() {
 }
 
 DataMap Solver::get_data() {
-
+    return {{"test", "test"}};
 }
