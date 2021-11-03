@@ -21,7 +21,7 @@ DIRECTIONS = [Direction.LEFT, Direction.RIGHT, Direction.UP, Direction.DOWN]
 
 class Puzzle:
     SIZE = 4
-    def __init__(self):
+    def __init__(self, str_rep = None):
         self.solution_path = []
         # create starting positions
         self.positions = [[self.SIZE * i + j + 1 for j in range(self.SIZE)] for i in range(self.SIZE)]
@@ -31,9 +31,22 @@ class Puzzle:
         self.positions[self.empty_y][self.empty_x] = 0
         # shuffle
         self.shuffle_path = []
-        self.shuffle(self.SIZE ** 4)
-        self.shuffle_path = []
-        self.solution_path = []
+        if str_rep is None:
+            self.shuffle(self.SIZE ** 4)
+            self.shuffle_path = []
+            self.solution_path = []
+        else:
+            for i, pos in enumerate(map(int, str_rep.split('|'))):
+                if pos == 0:
+                    pos = self.SIZE ** 2
+                x = i % self.SIZE
+                y = int(i / self.SIZE)
+                if pos == self.SIZE ** 2:
+                    self.positions[y][x] = 0
+                    self.empty_x = x
+                    self.empty_y = y
+                else:
+                    self.positions[y][x] = pos
     
     def short_state_repr(self) -> str:
         """ Represent currect state as short string """
@@ -57,7 +70,7 @@ class Puzzle:
         if successfull:
             self.empty_x += dir_x
             self.empty_y += dir_y
-            self.solution_path.append(dir)
+            self.solution_path.append(dir.name)
         return successfull
 
     def swap(self, x1: int, y1: int, x2: int, y2: int) -> bool:
@@ -122,8 +135,8 @@ class Puzzle:
             if self.puzzle_swap(d):
                 self.shuffle_path.append(d)
         # show path
-        print(f'Path taken to shuffle ({len(self.shuffle_path)} steps):')
-        print(' -> '.join(p.name for p in self.shuffle_path))
+        # print(f'Path taken to shuffle ({len(self.shuffle_path)} steps):')
+        # print(' -> '.join(p.name for p in self.shuffle_path))
 
     def reverse_shuffle(self):
         for p in self.shuffle_path[::-1]:

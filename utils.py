@@ -6,8 +6,11 @@ from typing import Tuple
 # #############################################################################
 
 def _get_console_size() -> Tuple:
-    rows, columns = os.popen('stty size', 'r').read().split()
-    return (int(rows), int(columns))
+    try:
+        rows, columns = os.popen('stty size', 'r').read().split()
+        return (int(rows), int(columns))
+    except:
+        return (24, 80)
 
 # #############################################################################
 # ############################### Text styling ################################

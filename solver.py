@@ -41,7 +41,7 @@ class Solver():
                 if succ.is_finished():
                     self.solution = succ
                     self.solving_time = time.time() - self.start_time
-                    print(f'Found final solution in {self.solving_time}: {succ.solution_path}')
+                    print(f'Found final solution in {self.solving_time}: ({len(succ.solution_path)}) {succ.solution_path}')
                     return
                 # f = g + h
                 succ_f  = len(succ.solution_path)  + self.heuristic(succ)
@@ -95,4 +95,4 @@ class Solver():
             data = datadict[key]
             print(f'{key} ({len(data)} items): time {avg([float(i.get("time")) for i in data])} {[float(i.get("time")) for i in data]}')
         for key in datadict:
-            print(str(key) + str(datadict[key]))
+            print(f'{key} {datadict[key]}')
