@@ -14,8 +14,8 @@ class Solver {
         double solving_time = 0;
         time_t start_time;
         
-        Solver(Puzzle puzzle);
-        int heuristic(int number_of_heuristic, Puzzle puzzle);
+        Solver(Puzzle& puzzle);
+        int heuristic(int number_of_heuristic, Puzzle& puzzle);
         void solve(int number_of_heuristic);
         DataMap get_data();
 };

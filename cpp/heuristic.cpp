@@ -5,7 +5,7 @@
 #include <math.h>
 
 
-int heuristic1(Puzzle puzzle) {
+int heuristic1(Puzzle& puzzle) {
     int distances = 0;
     int expected_x;
     int expected_y;
@@ -23,7 +23,7 @@ int heuristic1(Puzzle puzzle) {
     return Puzzle::SIZE * distances;
 }
 
-int heuristic2(Puzzle puzzle) {
+int heuristic2(Puzzle& puzzle) {
     int incorrect = 0;
     int expected_x;
     int expected_y;
