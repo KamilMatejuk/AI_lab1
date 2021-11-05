@@ -5,11 +5,12 @@
 #include <iostream>
 #include <string>
 #include <limits>
+#include <ctime>
 
 Solver::Solver(Puzzle& puzzle) {
     visited_states = {};
     states_to_visit = { puzzle };
-    time(&start_time);
+    start_time = clock();
 }
 
 int Solver::heuristic(int number_of_heuristic, Puzzle& puzzle) {
@@ -22,14 +23,16 @@ int Solver::heuristic(int number_of_heuristic, Puzzle& puzzle) {
 
 void Solver::solve(int number_of_heuristic) {
     // TODO DLACZEGO NIE DZIAŁA DLA WIEKSZYCH ROZMIARÓW
-    time(&start_time);
+    start_time = clock();
     while (states_to_visit.size() != 0) {
         // find nodes with least f
-        int min_f = numeric_limits<int>::infinity();
-        int min_g = numeric_limits<int>::infinity();
-        int min_h = numeric_limits<int>::infinity();
+        int min_index = -1;
+        int min_f = numeric_limits<int>::max();
+        int min_g = numeric_limits<int>::max();
+        int min_h = numeric_limits<int>::max();
         Puzzle min_state = Puzzle();
-        for (Puzzle state : states_to_visit) {
+        for (int i = 0; i < states_to_visit.size(); i++) {
+            Puzzle state = states_to_visit[i];
             int h = heuristic(number_of_heuristic, state);
             int g = state.solution_path.size();
             int f = g + h;
@@ -37,38 +40,26 @@ void Solver::solve(int number_of_heuristic) {
                 min_f = f;
                 min_g = g;
                 min_h = h;
+                min_index = i;
                 min_state = state;
             }
         }
-        // TODO DLACZEGO G I H SĄ NEIPOPRAWNE
         cout << "Found minimal state " << min_state.short_state_repr() << \
                 " -> f = g + h = " << min_g << " + " << min_h << " = " << \
-                min_f << endl;
+                min_f << " " << endl;
         // pop off list
-        // TODO DLACZEGO KURDE NIE DZIALŁASZ??????
-        // TODO DLACZEGO NIE USUWA Z KOLEJKI
-        int index = -1;
-        for (int i = 0; i < states_to_visit.size(); i++) {
-            if (states_to_visit[i] == min_state) {
-                index = i;
-            }
-        }
-        if (index != -1) {
-            cout << "Removing from queue" << endl;
-            states_to_visit.erase(states_to_visit.begin() + index);
+        if (min_index != -1) {
+            states_to_visit.erase(states_to_visit.begin() + min_index);
         }
         // for each successor
         for (Direction move : min_state.get_possible_moves()) {
             Puzzle succ = min_state.copy();
             succ.swap(move);
             // check if finished
-            // TODO DLACZEGO SIE NIE ZATRZYMUJE
             if (succ.is_finished()) {
                 solution = succ;
-                time_t end_time;
-                time(&end_time);
-                solving_time = end_time - start_time;
-                cout << "Found final solution in" << solving_time << " (" << solution.solution_path.size() << ")" << endl;
+                solving_time = ((double) (clock() - start_time)) / CLOCKS_PER_SEC;
+                cout << "Found final solution in " << solving_time << " s (path length: " << solution.solution_path.size() << ")" << endl;
                 for (Direction d : solution.solution_path) {
                     cout << get_direction_name(d) + " ";
                 }
@@ -118,12 +109,10 @@ DataMap Solver::get_data() {
         path += get_direction_name(d) + " ";
     }
     if (solving_time == 0) {
-        time_t end_time;
-        time(&end_time);
-        solving_time = end_time - start_time;
+        solving_time = ((double) (clock() - start_time)) / CLOCKS_PER_SEC;
     }
     return {
-        {"number of visited states", to_string(visited_states.size())},
+        {"number of visited states", to_string(visited_states.size() + 1)},
         {"path length", to_string(solution.solution_path.size())},
         {"path", path},
         {"time", to_string(solving_time)}

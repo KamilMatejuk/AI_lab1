@@ -12,14 +12,8 @@ int main() {
     srand(time(NULL));
     // TODO dodać logi
     int number_of_iterations = 1;
-    int number_of_heuristics = 2;
+    int number_of_heuristics = 3;
     map<string, DataMap> results;
-
-    // Puzzle p = Puzzle();
-    // p.show();
-    // Solver s = Solver(p);
-    // cout << s.heuristic(1, p) << endl;
-    // return 0;
     
     for (int i = 0; i < number_of_iterations; i++) {
         cout << iteration_name("Running test " + to_string(i + 1)) << endl;

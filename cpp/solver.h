@@ -2,7 +2,6 @@
 #include <vector>
 #include <ctime>
 #include <map>
-using namespace std;
 
 typedef map<string, string> DataMap;
 
@@ -12,7 +11,7 @@ class Solver {
         vector<Puzzle> states_to_visit;
         Puzzle solution;
         double solving_time = 0;
-        time_t start_time;
+        clock_t start_time;
         
         Solver(Puzzle& puzzle);
         int heuristic(int number_of_heuristic, Puzzle& puzzle);
