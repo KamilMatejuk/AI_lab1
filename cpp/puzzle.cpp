@@ -1,4 +1,5 @@
 #include "puzzle.h"
+#include "utils.h"
 #include <iostream>
 #include <iomanip>
 #include <string>
@@ -110,9 +111,6 @@ bool Puzzle::swap(Direction direction) {
     // swap
     positions[empty_y][empty_x] = positions[y][x];
     positions[y][x] = 0;
-    // cout << "Swapped (" + to_string(empty_x) + ", " + to_string(empty_y) + ") " +\
-    //         get_direction_name(direction) + " to (" + to_string(x) + ", " + to_string(y) +\
-    //          ")" << endl;
     empty_x = x;
     empty_y = y;
     solution_path.push_back(direction);
@@ -182,21 +180,20 @@ void Puzzle::show() {
     for (int i = 0; i < SIZE; i++) {
         edge += "----+";
     }
-    cout << endl;
-    cout << edge << endl;
+    log(edge);
     for (int i = 0; i < SIZE; i++) {
-        cout << "|";
+        string inside = "|";
         for (int j = 0; j < SIZE; j++) {
             int p = positions[i][j];
             if (p == 0) {
-                cout << "    |";
+                inside += "    |";
             } else if (p > 9) {
-                cout << " " << positions[i][j] << " |";
+                inside += " " + to_string(positions[i][j]) + " |";
             } else {
-                cout << "  " << positions[i][j] << " |";
+                inside += "  " + to_string(positions[i][j]) + " |";
             }
         }
-        cout << endl;
-        cout << edge << endl;
+        log(inside);
+        log(edge);
     }
 }

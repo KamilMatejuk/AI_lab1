@@ -1,5 +1,6 @@
 #include "puzzle.h"
 #include "heuristic.h"
+#include "utils.h"
 #include "solver.h"
 #include <algorithm>
 #include <iostream>
@@ -15,14 +16,14 @@ Solver::Solver(Puzzle& puzzle) {
 
 int Solver::heuristic(int number_of_heuristic, Puzzle& puzzle) {
     switch(number_of_heuristic) {
-        case 1: return heuristic1(puzzle);
-        case 2: return heuristic2(puzzle);
-        default: return 0;
+        // case 1: return heuristic1(puzzle);
+        // case 2: return heuristic2(puzzle);
+        // case 3: return heuristic3(puzzle);
+        default: return heuristic3(puzzle);
     }
 }
 
 void Solver::solve(int number_of_heuristic) {
-    // TODO DLACZEGO NIE DZIAŁA DLA WIEKSZYCH ROZMIARÓW
     start_time = clock();
     while (states_to_visit.size() != 0) {
         // find nodes with least f
@@ -44,9 +45,9 @@ void Solver::solve(int number_of_heuristic) {
                 min_state = state;
             }
         }
-        cout << "Found minimal state " << min_state.short_state_repr() << \
-                " -> f = g + h = " << min_g << " + " << min_h << " = " << \
-                min_f << " " << endl;
+        log("Found minimal state " + min_state.short_state_repr() + \
+                " -> f = g + h = " + to_string(min_g) + " + " + \
+                to_string(min_h) + " = " + to_string(min_f));
         // pop off list
         if (min_index != -1) {
             states_to_visit.erase(states_to_visit.begin() + min_index);
@@ -59,11 +60,13 @@ void Solver::solve(int number_of_heuristic) {
             if (succ.is_finished()) {
                 solution = succ;
                 solving_time = ((double) (clock() - start_time)) / CLOCKS_PER_SEC;
-                cout << "Found final solution in " << solving_time << " s (path length: " << solution.solution_path.size() << ")" << endl;
+                log("Found final solution in " + to_string(solving_time) + " s (path length: " + \
+                    to_string(solution.solution_path.size()) + ")");
+                string path = "";
                 for (Direction d : solution.solution_path) {
-                    cout << get_direction_name(d) + " ";
+                    path += get_direction_name(d) + " ";
                 }
-                cout << endl;
+                log(path);
                 return;
             }
             // f = g + h

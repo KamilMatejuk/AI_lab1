@@ -1,44 +1,34 @@
+#include "utils.h"
 #include "puzzle.h"
 #include "heuristic.h"
 #include "solver.h"
-#include "utils.h"
 #include <iostream>
 #include <string>
-#include <vector>
 #include <ctime>
 using namespace std;
 
 int main() {
+    clear_log();
     srand(time(NULL));
-    // TODO dodać logi
     int number_of_iterations = 1;
-    int number_of_heuristics = 3;
+    int number_of_heuristics = 1;
     map<string, DataMap> results;
     
     for (int i = 0; i < number_of_iterations; i++) {
-        cout << iteration_name("Running test " + to_string(i + 1)) << endl;
-        cout << section_name("Generating random Puzzle 15") << endl;
+        log(iteration_name("Running test " + to_string(i + 1)));
+        log(section_name("Generating random Puzzle 15"));
         // random starting permutation
         Puzzle p = Puzzle();
         p.show();
         // solve with heuristics
         for (int j = 0; j < number_of_heuristics; j++) {
-            cout << section_name("Testing heuristic " + to_string(j + 1)) << endl;
+            log(section_name("Testing heuristic " + to_string(j + 1)));
             Solver s = Solver(p);
             s.solve(j);
-            results.insert({"heuristic " + to_string(j + 1), s.get_data()});
+            results.insert({"heuristic " + to_string(j + 1) + " " + to_string(i), s.get_data()});
         }
     }
-    cout << iteration_name("Comparing results") << endl;
-    for (auto const& x : results) {
-        string heuristic_name = x.first;
-        DataMap data = x.second;
-        cout << heuristic_name << endl;
-        for (auto const& d : data) {
-            string key = d.first;
-            string value = d.second;
-            cout << "\t{" << key << ": " << value << "}" << endl;
-        }
-    }
+    log(iteration_name("Comparing results"));
+    Solver::compare_results(results, number_of_heuristics);
     return 0;
 }

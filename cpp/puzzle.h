@@ -17,7 +17,7 @@ string get_direction_name(Direction d);
 
 class Puzzle {
     public:
-        static const int SIZE = 2;
+        static const int SIZE = 4;
         int positions[SIZE][SIZE];
         vector<Direction> solution_path;
         int empty_x;
