@@ -16,10 +16,10 @@ Solver::Solver(Puzzle& puzzle) {
 
 int Solver::heuristic(int number_of_heuristic, Puzzle& puzzle) {
     switch(number_of_heuristic) {
-        // case 1: return heuristic1(puzzle);
-        // case 2: return heuristic2(puzzle);
-        // case 3: return heuristic3(puzzle);
-        default: return heuristic3(puzzle);
+        case 1: return heuristic1(puzzle);
+        case 2: return heuristic2(puzzle);
+        case 3: return heuristic3(puzzle);
+        default: return 0;
     }
 }
 
@@ -31,27 +31,27 @@ void Solver::solve(int number_of_heuristic) {
         int min_f = numeric_limits<int>::max();
         int min_g = numeric_limits<int>::max();
         int min_h = numeric_limits<int>::max();
-        Puzzle min_state = Puzzle();
         for (int i = 0; i < states_to_visit.size(); i++) {
             Puzzle state = states_to_visit[i];
-            int h = heuristic(number_of_heuristic, state);
             int g = state.solution_path.size();
+            int h = heuristic(number_of_heuristic, state);
             int f = g + h;
             if (f < min_f) {
                 min_f = f;
                 min_g = g;
                 min_h = h;
                 min_index = i;
-                min_state = state;
             }
         }
+        if (min_index == -1) {
+            continue;
+        }
+        Puzzle min_state = states_to_visit[min_index];
         log("Found minimal state " + min_state.short_state_repr() + \
                 " -> f = g + h = " + to_string(min_g) + " + " + \
                 to_string(min_h) + " = " + to_string(min_f));
         // pop off list
-        if (min_index != -1) {
-            states_to_visit.erase(states_to_visit.begin() + min_index);
-        }
+        states_to_visit.erase(states_to_visit.begin() + min_index);
         // for each successor
         for (Direction move : min_state.get_possible_moves()) {
             Puzzle succ = min_state.copy();
