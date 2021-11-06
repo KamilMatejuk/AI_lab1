@@ -3,24 +3,28 @@
 #include <stdlib.h>
 #include <string>
 #include <vector>
+#include <thread>
+#include <cstdlib>
 #include <ctime>
 #include <map>
 
 typedef map<string, string> DataMap;
 
-template<typename T> static void show_data(string name, vector<T> v) {
+template<typename T> static void show_data(string name, vector<T> v, bool time) {
     string values = bold(cyan(name)) + " [ ";
-    for (T vs : v) {
-        values += to_string(vs) + " ";
+    for (int i = 0; i < v.size(); i++) {
+        string padding_l = (i == 0) ? "" : "\n\t\t ";
+        string vss = time ? time_to_str(v[i], false) : to_string(v[i]);
+        values += time ? padding_l + vss : vss + " ";
     }
-    values += "]";
-    log(values);
-    log(bold("\taverage:       ") + to_string(avg(v)));
-    log(bold("\tmedian:        ") + to_string(median(v)));
-    log(bold("\tstd deviation: ") + to_string(standard_deviation(v)));
+    values += " ]";
+    log(values, true);
+    log(bold("\taverage:       ") + (time ? time_to_str(avg(v)) : to_string(avg(v))), true);
+    log(bold("\tmedian:        ") + (time ? time_to_str(median(v)) : to_string(median(v))), true);
+    log(bold("\tstd deviation: ") + (time ? time_to_str(standard_deviation(v)) : to_string(standard_deviation(v))), true);
 }
-template static void show_data(string, vector<int>);
-template static void show_data(string, vector<double>);
+template static void show_data(string, vector<int>, bool);
+template static void show_data(string, vector<double>, bool);
 
 class Solver {
     public:
@@ -33,6 +37,8 @@ class Solver {
         Solver(Puzzle& puzzle);
         int heuristic(int number_of_heuristic, Puzzle& puzzle);
         void solve(int number_of_heuristic);
+        bool check_successor(Puzzle& succ, Direction move, int number_of_heuristic);
+        string get_path();
         DataMap get_data();
 
         static void compare_results(map<string, DataMap> results, int number_of_heuristics) {
@@ -58,14 +64,15 @@ class Solver {
                             if (key == "time") {
                                 times.push_back(stod(value, NULL));
                             }
+                            // cout << key << ": " << value << endl;
                         }
                     }
                 }
 
-                log(bold(red(heuristic_key)));
-                show_data("Visited states", numbers_of_visited_states);
-                show_data("Path lengths  ", path_lengths);
-                show_data("Duration      ", times);
+                log(bold(red(heuristic_key)), true);
+                show_data("Visited states", numbers_of_visited_states, false);
+                show_data("Path lengths  ", path_lengths, false);
+                show_data("Duration      ", times, true);
             }
         }
 

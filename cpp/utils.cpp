@@ -1,3 +1,4 @@
+#include "settings.h"
 #include "utils.h"
 #include <string>
 #include <vector>
@@ -59,14 +60,44 @@ string iteration_name(string text) {
     return bold(cyan(res));
 }
 
+string time_to_str(double time, bool short_version /* true */) {
+    double t = time;
+    int h = time / 3600;
+    time -= 3600 * h;
+    int m = time / 60;
+    time -= 60 * m;
+    int s = time;
+    time -= s;
+    int ms = time * 1000;
+    string res = "";
+    char buffer[24];
+    if (!short_version || h > 0) {
+        sprintf(buffer, "%1s", to_string(h).c_str());
+        res += string(buffer) + " h ";
+    }
+    if (!short_version || m > 0) {
+        sprintf(buffer, "%2s", to_string(m).c_str());
+        res += string(buffer) + " m ";
+    }
+    if (!short_version || s > 0) {
+        sprintf(buffer, "%2s", to_string(s).c_str());
+        res += string(buffer) + " s ";
+    }
+    sprintf(buffer, "%3s", to_string(ms).c_str());
+    res += string(buffer) + " ms (" + to_string(t) + "s)";
+    return res;
+}
+
 void clear_log() {
     ofstream outfile;
     outfile.open(LOG_FILE);
     outfile << "";
 }
 
-void log(string text) {
-    cout << text << endl;
+void log(string text, bool show /* false */) {
+    if (show) {
+        cout << text << endl;
+    }
     // remove special chars
     vector<string> remove_list;
     remove_list.push_back("\033[0m");
@@ -81,6 +112,18 @@ void log(string text) {
         }
     }
     ofstream outfile;
-    outfile.open(LOG_FILE, ios_base::app); // append instead of overwrite
+    outfile.open(LOG_FILE, ios_base::app); // append
+    outfile << text + "\n";
+}
+
+void clear_path() {
+    ofstream outfile;
+    outfile.open(SAVE_PATH_FILE);
+    outfile << "";
+}
+
+void save_path(string text) {
+    ofstream outfile;
+    outfile.open(SAVE_PATH_FILE, ios_base::app); // append
     outfile << text + "\n";
 }

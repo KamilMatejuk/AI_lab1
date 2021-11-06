@@ -1,3 +1,4 @@
+#include "settings.h"
 #include "puzzle.h"
 #include "heuristic.h"
 #include <iostream>
@@ -11,38 +12,38 @@ int heuristic1(Puzzle& puzzle) {
     // (1 is most important, 15 is least important)
     // summed with exponential distance from empty space to first not ordered cell
     int distances = 0;
-    for (int i = 0; i < Puzzle::SIZE; i++) {
-        for (int j = 0; j < Puzzle::SIZE; j++) {
+    for (int i = 0; i < PUZZLE_SIZE; i++) {
+        for (int j = 0; j < PUZZLE_SIZE; j++) {
             int p = puzzle.positions[i][j];
             if(p == 0) {
-                p = pow(Puzzle::SIZE, 2);
+                p = pow(PUZZLE_SIZE, 2);
             }
-            int expected_x = (p - 1) % Puzzle::SIZE;
-            int expected_y = floor((p - 1) / Puzzle::SIZE);
+            int expected_x = (p - 1) % PUZZLE_SIZE;
+            int expected_y = floor((p - 1) / PUZZLE_SIZE);
             int d = abs(j - expected_x) + abs(i - expected_y);
-            int importance = pow(Puzzle::SIZE, 2) - p;
+            int importance = pow(PUZZLE_SIZE, 2) - p;
             distances += d * importance;
         }
     }
     // distance from empty to first not ordered
-    for (int i = 0; i < Puzzle::SIZE; i++) {
-        for (int j = 0; j < Puzzle::SIZE; j++) {
+    for (int i = 0; i < PUZZLE_SIZE; i++) {
+        for (int j = 0; j < PUZZLE_SIZE; j++) {
             int p = puzzle.positions[i][j];
             if(p == 0) {
-                p = pow(Puzzle::SIZE, 2);
+                p = pow(PUZZLE_SIZE, 2);
             }
-            int expected_x = (p - 1) % Puzzle::SIZE;
-            int expected_y = floor((p - 1) / Puzzle::SIZE);
+            int expected_x = (p - 1) % PUZZLE_SIZE;
+            int expected_y = floor((p - 1) / PUZZLE_SIZE);
             if((i != expected_y) || (j != expected_x)) {
                 int d = abs(j - puzzle.empty_x) + abs(i - puzzle.empty_y);
-                int importance = pow(Puzzle::SIZE, 2) - p;
+                int importance = pow(PUZZLE_SIZE, 2) - p;
                 distances += d * importance * importance;
                 goto endloop;
             }
         }
     }
     endloop:
-    return Puzzle::SIZE * distances;
+    return PUZZLE_SIZE * distances;
 }
 
 int heuristic2(Puzzle& puzzle) {
@@ -50,35 +51,35 @@ int heuristic2(Puzzle& puzzle) {
     // with weights depending on cell nr
     // (1 is most important, 15 is least important)
     int distances = 0;
-    for (int i = 0; i < Puzzle::SIZE; i++) {
-        for (int j = 0; j < Puzzle::SIZE; j++) {
+    for (int i = 0; i < PUZZLE_SIZE; i++) {
+        for (int j = 0; j < PUZZLE_SIZE; j++) {
             int p = puzzle.positions[i][j];
             if(p == 0) {
-                p = pow(Puzzle::SIZE, 2);
+                p = pow(PUZZLE_SIZE, 2);
             }
-            int expected_x = (p - 1) % Puzzle::SIZE;
-            int expected_y = floor((p - 1) / Puzzle::SIZE);
+            int expected_x = (p - 1) % PUZZLE_SIZE;
+            int expected_y = floor((p - 1) / PUZZLE_SIZE);
             int d = abs(j - expected_x) + abs(i - expected_y);
-            int importance = pow(Puzzle::SIZE, 2) - p;
+            int importance = pow(PUZZLE_SIZE, 2) - p;
             distances += d * importance;
         }
     }
-    return Puzzle::SIZE * distances;
+    return PUZZLE_SIZE * distances;
 }
 
 int heuristic3(Puzzle& puzzle) {
     // Manhattan Distance from cell to correct position 
     int distances = 0;
-    for (int i = 0; i < Puzzle::SIZE; i++) {
-        for (int j = 0; j < Puzzle::SIZE; j++) {
+    for (int i = 0; i < PUZZLE_SIZE; i++) {
+        for (int j = 0; j < PUZZLE_SIZE; j++) {
             int p = puzzle.positions[i][j];
             if(p == 0) {
-                p = pow(Puzzle::SIZE, 2);
+                p = pow(PUZZLE_SIZE, 2);
             }
-            int expected_x = (p - 1) % Puzzle::SIZE;
-            int expected_y = floor((p - 1) / Puzzle::SIZE);
+            int expected_x = (p - 1) % PUZZLE_SIZE;
+            int expected_y = floor((p - 1) / PUZZLE_SIZE);
             distances += abs(j - expected_x) + abs(i - expected_y);
         }
     }
-    return Puzzle::SIZE * distances;
+    return PUZZLE_SIZE * distances;
 }

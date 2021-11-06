@@ -17,17 +17,14 @@ string get_direction_name(Direction d);
 
 class Puzzle {
     public:
-        static const int SIZE = 4;
-        int positions[SIZE][SIZE];
-        vector<Direction> solution_path;
+        string id;
         int empty_x;
         int empty_y;
-
-        friend bool operator== (const Puzzle &p1, const Puzzle &p2);
+        int positions[PUZZLE_SIZE][PUZZLE_SIZE];
+        int solution_path_size;
         
-        Puzzle();
-        Puzzle(bool _shuffle);
-        Puzzle copy();
+        Puzzle(bool _shuffle = false);
+        Puzzle copy(int new_id);
         string short_state_repr();
         bool swap(Direction direction);
         void shuffle(int n);

@@ -1,3 +1,4 @@
+#include "settings.h"
 #include "puzzle.h"
 #include "utils.h"
 #include <iostream>
@@ -18,77 +19,43 @@ string get_direction_name(Direction d) {
     return name;
 }
 
-Puzzle::Puzzle() {
+Puzzle::Puzzle(bool _shuffle /* false */) {
     // create starting positions
-    for (int i = 0; i < SIZE; i++) {
-        for (int j = 0; j < SIZE; j++) {
-            positions[i][j] = SIZE * i + j + 1;
+    for (int i = 0; i < PUZZLE_SIZE; i++) {
+        for (int j = 0; j < PUZZLE_SIZE; j++) {
+            positions[i][j] = PUZZLE_SIZE * i + j + 1;
         }
     }
-    empty_x = SIZE - 1;
-    empty_y = SIZE - 1;
+    empty_x = PUZZLE_SIZE - 1;
+    empty_y = PUZZLE_SIZE - 1;
     positions[empty_y][empty_x] = 0;
-    // shuffle
-    shuffle(pow(SIZE, 4));
-    solution_path = {};
-};
-
-Puzzle::Puzzle(bool _shuffle) {
-    // create starting positions
-    for (int i = 0; i < SIZE; i++) {
-        for (int j = 0; j < SIZE; j++) {
-            positions[i][j] = SIZE * i + j + 1;
-        }
-    }
-    empty_x = SIZE - 1;
-    empty_y = SIZE - 1;
-    positions[empty_y][empty_x] = 0;
+    id = "";
     // shuffle
     if (_shuffle) {
-        shuffle(pow(SIZE, 4));
+        shuffle(pow(PUZZLE_SIZE, 4));
     }
-    solution_path = {};
+    solution_path_size = 0;
 };
 
-bool operator== (const Puzzle &p1, const Puzzle &p2) {
-    for (int i = 0; i < Puzzle::SIZE; i++) {
-        for (int j = 0; j < Puzzle::SIZE; j++) {
-            if (p1.positions[i][j] != p2.positions[i][j]) {
-                return false;
-            }
-        }
-    }
-    if (p1.empty_x != p2.empty_x) {
-        return false;
-    }
-    if (p1.empty_y != p2.empty_y) {
-        return false;
-    }
-    if (p1.solution_path != p2.solution_path) {
-        return false;
-    }
-    return true;
-}
-
-Puzzle Puzzle::copy() {
+Puzzle Puzzle::copy(int new_id) {
     Puzzle p = Puzzle(false);
-    for (int i = 0; i < SIZE; i++) {
-        for (int j = 0; j < SIZE; j++) {
+    // set id
+    p.id = id + to_string(new_id);
+    for (int i = 0; i < PUZZLE_SIZE; i++) {
+        for (int j = 0; j < PUZZLE_SIZE; j++) {
             p.positions[i][j] = positions[i][j];
         }
     }
     p.empty_x = empty_x;
     p.empty_y = empty_y;
-    for (Direction d : solution_path) {
-        p.solution_path.push_back(d);
-    }
+    p.solution_path_size = solution_path_size;
     return p;
 }
 
 string Puzzle::short_state_repr() {
     string repr = "";
-    for (int i = 0; i < SIZE; i++) {
-        for (int j = 0; j < SIZE; j++) {
+    for (int i = 0; i < PUZZLE_SIZE; i++) {
+        for (int j = 0; j < PUZZLE_SIZE; j++) {
             repr += to_string(positions[i][j]) + "|";
         }
     }
@@ -100,7 +67,7 @@ bool Puzzle::swap(Direction direction) {
     int x = round(empty_x + sin(angle_radians));
     int y = round(empty_y - cos(angle_radians));
     // check if in range
-    if (x < 0 || x >= SIZE || y < 0 || y >= SIZE) {
+    if (x < 0 || x >= PUZZLE_SIZE || y < 0 || y >= PUZZLE_SIZE) {
         return false;
     }
     // check if adjacent
@@ -113,7 +80,9 @@ bool Puzzle::swap(Direction direction) {
     positions[y][x] = 0;
     empty_x = x;
     empty_y = y;
-    solution_path.push_back(direction);
+    solution_path_size++;
+    // save swap
+    save_path(id + " " + get_direction_name(direction));
     return true;
 }
 
@@ -134,10 +103,10 @@ void Puzzle::shuffle(int n) {
         }
     }
     // return empty place to lower right corner
-    for (int i = empty_x; i < SIZE - 1; i++) {
+    for (int i = empty_x; i < PUZZLE_SIZE - 1; i++) {
         swap(Direction::RIGHT);
     }
-    for (int i = empty_y; i < SIZE - 1; i++) {
+    for (int i = empty_y; i < PUZZLE_SIZE - 1; i++) {
         swap(Direction::DOWN);
     }
 }
@@ -151,7 +120,7 @@ vector<Direction> Puzzle::get_possible_moves() {
         int x = round(empty_x + sin(angle_radians));
         int y = round(empty_y - cos(angle_radians));
         // check if in range
-        if (x >= 0 && x < SIZE && y >= 0 && y < SIZE) {
+        if (x >= 0 && x < PUZZLE_SIZE && y >= 0 && y < PUZZLE_SIZE) {
             possible_dirs.push_back(d);
         }
     }
@@ -159,14 +128,14 @@ vector<Direction> Puzzle::get_possible_moves() {
 }
 
 bool Puzzle::is_finished() {
-    for (int i = 0; i < SIZE; i++) {
-        for (int j = 0; j < SIZE; j++) {
+    for (int i = 0; i < PUZZLE_SIZE; i++) {
+        for (int j = 0; j < PUZZLE_SIZE; j++) {
             int p = positions[i][j];
             if (p == 0) {
-                p = SIZE * SIZE;
+                p = PUZZLE_SIZE * PUZZLE_SIZE;
             }
-            int expected_x = (p - 1) % SIZE;
-            int expected_y = int((p - 1) / SIZE);
+            int expected_x = (p - 1) % PUZZLE_SIZE;
+            int expected_y = int((p - 1) / PUZZLE_SIZE);
             if (expected_y != i || expected_x != j) {
                 return false;
             }
@@ -177,13 +146,13 @@ bool Puzzle::is_finished() {
 
 void Puzzle::show() {
     string edge = "+";
-    for (int i = 0; i < SIZE; i++) {
+    for (int i = 0; i < PUZZLE_SIZE; i++) {
         edge += "----+";
     }
-    log(edge);
-    for (int i = 0; i < SIZE; i++) {
+    log(edge, true);
+    for (int i = 0; i < PUZZLE_SIZE; i++) {
         string inside = "|";
-        for (int j = 0; j < SIZE; j++) {
+        for (int j = 0; j < PUZZLE_SIZE; j++) {
             int p = positions[i][j];
             if (p == 0) {
                 inside += "    |";
@@ -193,7 +162,7 @@ void Puzzle::show() {
                 inside += "  " + to_string(positions[i][j]) + " |";
             }
         }
-        log(inside);
-        log(edge);
+        log(inside, true);
+        log(edge, true);
     }
 }

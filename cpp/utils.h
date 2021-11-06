@@ -16,9 +16,15 @@ int get_console_width();
 string section_name(string text);
 string iteration_name(string text);
 
-static string LOG_FILE = "logs/size4.log";
+string time_to_str(double time, bool short_version = true);
+
+// static string RUN_NAME = "test";
+static string LOG_FILE = "logs/" + RUN_NAME + ".log";
 void clear_log();
-void log(string text);
+void log(string text, bool show = false);
+static string SAVE_PATH_FILE = "save_path/" + RUN_NAME + ".path";
+void clear_path();
+void save_path(string text);
 
 template<typename T> double avg(vector<T> v) {
     return (double)(accumulate(v.begin(), v.end(), 0.0) / v.size());
