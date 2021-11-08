@@ -25,7 +25,11 @@ int main() {
             Solver s = Solver(p);
             s.solve(j + 1);
             string map_key = "heuristic " + to_string(j + 1) + " " + to_string(i);
-            results.insert({map_key, s.get_data()});
+            DataMap data = s.get_data();
+            for (auto const& d : data) {
+                log(d.first + ": " + d.second, true);
+            }
+            results.insert({map_key, data});
         }
     }
     log(iteration_name("Comparing results"), true);
