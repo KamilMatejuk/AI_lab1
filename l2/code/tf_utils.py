@@ -4,6 +4,7 @@ from io_utils import get_data_from_idx_labels_file, get_data_from_idx_images_fil
 
 class Model:
     def __init__(self, id: str):
+        self.id = id
         self.checkpoint_dir = os.path.join(
             os.path.abspath(
                 os.path.dirname(
@@ -16,7 +17,7 @@ class Model:
         self.model = tf.keras.Sequential([
                 tf.keras.layers.Flatten(input_shape=(28, 28)),
                 tf.keras.layers.Dense(128, activation='relu'),
-                tf.keras.layers.Dense(10)])
+                tf.keras.layers.Dense(10)], name=self.id)
         self.optimizer = 'adam'
         self.loss = tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True)
         
@@ -27,7 +28,7 @@ class Model:
                 tf.keras.layers.Flatten(input_shape=(28, 28)),
                 *layers,
                 tf.keras.layers.Dense(10)
-            ])
+            ], name=self.id)
     
     def set_optimizer(self, optimizer: str):
         self.optimizer = optimizer
@@ -55,7 +56,7 @@ class Model:
               epochs=epochs,
               batch_size=batch_size,
               callbacks=[cp_callback])
-        print(self.history)
+        # print(self.history)
     
     def test(self, ds_test_images, ds_test_labels):
         self.model.evaluate(ds_test_images,  ds_test_labels, verbose=2)
