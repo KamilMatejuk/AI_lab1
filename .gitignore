@@ -1,13 +1,15 @@
 .vscode/
 */code/main
 */code/*.o
+*/code/__pycache__/
 */sprawozdanie/sprawozdanie.out
 */sprawozdanie/sprawozdanie.aux
 */sprawozdanie/sprawozdanie.bbl
 */sprawozdanie/sprawozdanie.blg
-*/sprawozdanie/sprawozdanie.fdb_latexmk
 */sprawozdanie/sprawozdanie.fls
 */sprawozdanie/sprawozdanie.log
 */sprawozdanie/sprawozdanie.out
 */sprawozdanie/sprawozdanie.toc
 */sprawozdanie/sprawozdanie.dvi
+*/sprawozdanie/sprawozdanie.synctex.gz
+*/sprawozdanie/sprawozdanie.fdb_latexmk

@@ -1,0 +1,252 @@
+% ***************************************************************************************************
+%
+%	Szablon pracy magisterskiej dla Politechniki Wrocławskiej w wersji dwustronnej.
+%	Autor:	Tomasz Strzałka
+%
+% ***************************************************************************************************
+
+% Styl dwustronny z domyślną wielkością czcionki 10pt oraz oddzieloną stroną tytułową (titlepage).
+% Domyślnie rodziały rozpoczynają się na stronie prawej (openright).
+\documentclass{book}
+
+% ***************************************************************************************************
+% Ustawienia języka
+% ***************************************************************************************************
+
+% Podstawowe ustawienia języka, według którego formatowany będzie dokument
+\usepackage[polish]{babel}
+
+% Pakiet babel dla polskiego języka powoduje konflikt z pakietem amssymb.
+% Polecenie '\lll' definiują oba pakiety - porządana jest druga definicja.
+\let\lll\undefined
+
+% W przypadku wielojęzykowości ustawia główny język dokumentu
+\selectlanguage{polish}
+
+% Kodowanie dokumentu
+\usepackage[utf8]{inputenc}
+
+% Dowolny rozmiar czcionek, kodowanie znaków
+\usepackage{lmodern}
+
+% Polskie wcięcia akapitów
+\usepackage{indentfirst}
+
+% Polskie łamanie wyrazów
+\usepackage[plmath]{polski}
+
+% Przecinek w wyrażeniach matematycznych zamiast kropki
+\usepackage{icomma}
+
+% Polskie formatowanie typograficzne
+\frenchspacing
+
+% Zapewnia liczne usprawnienia wyświetlania i organizacji matematycznych formuł. 
+\usepackage{amsmath}
+
+% Wprowadza rozszerzony zestaw symboli m.in. \leadsto
+\usepackage{amssymb}
+
+% Dodatkowa, ,,kręcona'' czcionka matematyczna
+\usepackage{mathrsfs}
+
+% Dodatkowe wsparcie dla środowiska mathbb, które nie wspiera domyślnie cyfr (\mathbb{})
+% \usepackage{bbold} TODO
+
+% Fixes/improves amsmath
+\usepackage{mathtools}
+
+
+% ***************************************************************************************************
+% Kolory  
+% ***************************************************************************************************
+
+% Umożliwia kolorowanie poszczególnych komórek tabeli
+\usepackage[table]{xcolor}% http://ctan.org/pkg/
+
+% Umożliwia łatwą zmianę koloru linii w tabeli
+\usepackage{tabu}
+
+% Umożliwia rozszerzoną kontrolę nad kolorami.
+\usepackage{xcolor}
+
+% Definicje kolorów
+\definecolor{lgray}{HTML}{9F9F9F}
+\definecolor{dgray}{HTML}{5F5F5F}
+% lgray				-	nazwa nowo zdefiniowanego koloru
+% HTML				-	model kolorów
+% CCCCCC			-	wartość koloru zgodna z modelem
+
+% ***************************************************************************************************
+% Algorytmy 
+% ***************************************************************************************************
+
+% Udostępnia środowisko do konstruowania pseudokodów
+\usepackage[ruled,vlined,linesnumbered,longend,algochapter]{algorithm2e}
+% ruled	- poziome kreski na początku i końcu algorytmu, podpis na górze oddzielony również kreską poziomą
+% vlined - pionowe kreski łączące początek polecenia z jego końcem
+% linesnumbered	- numerowanie kolejnych wierszy algorytmu
+% longend - długie końcówki np. ifend, forend itd.
+% algochapter - numeracja z rozdziałami
+
+% Zamiana nazwy środowiska z domyślnej "Algorithm X" na "Pseudokod X"
+\newenvironment{pseudokod}[1][htb]{
+	\renewcommand{\algorithmcfname}{Pseudokod}
+	\begin{algorithm}[#1]%
+	}{
+\end{algorithm}
+}
+
+% Zmiana rozmiaru komentarzy
+\newcommand\algcomment[1]{
+	\footnotesize{#1}
+}
+
+% Ustawienie zadanego stylu dla komentarzy
+\SetCommentSty{algcomment}
+
+% Wyśrodkowana tylda
+\usepackage{textcomp}%
+\newcommand{\textapprox}{\raisebox{0.5ex}{\texttildelow}}
+
+% Listowanie kodów źródłowych
+\usepackage{listings} 
+\renewcommand{\lstlistingname}{Kod źródłowy} % Polska nazwa listingu
+
+% Definicje pecjalnych znaków, które nie są obsługiwane w środowisku listing
+\lstset{literate=
+	{ż}{{\.{z}}}1	{ź}{{\'{z}}}1
+	{ć}{{\'{c}}}1	{ń}{{\'{n}}}1
+	{ą}{{\c a}}1	{ś}{{\'{s}}}1
+	{ł}{{\l}}1		{ę}{{\c{e}}}1
+	{ó}{{\'{o}}}1	{á}{{\'a}}1
+	{é}{{\'e}}1		{í}{{\'i}}1
+	{ó}{{\'o}}1		{ú}{{\'u}}1
+	{ù}{{\`u}}1		{Á}{{\'A}}1
+	{É}{{\'E}}1		{Í}{{\'I}}1
+	{Ó}{{\'O}}1		{Ú}{{\'U}}1
+	{à}{{\`a}}1		{è}{{\'e}}1
+	{ì}{{\`i}}1		{ò}{{\`o}}1
+	{ò}{{\`o}}1		{À}{{\`A}}1
+	{È}{{\'E}}1		{Ì}{{\`I}}1
+	{Ò}{{\`O}}1		{Ò}{{\`O}}1
+	{ä}{{\"a}}1		{ë}{{\"e}}1
+	{ï}{{\"i}}1		{ö}{{\"o}}1
+	{ü}{{\"u}}1		{Ä}{{\"A}}1
+	{Ë}{{\"E}}1		{Ï}{{\"I}}1
+	{Ö}{{\"O}}1		{Ü}{{\"U}}1
+	{â}{{\^a}}1		{ê}{{\^e}}1
+	{î}{{\^i}}1		{ô}{{\^o}}1
+	{û}{{\^u}}1		{Â}{{\^A}}1
+	{Ê}{{\^E}}1		{Î}{{\^I}}1
+	{Ô}{{\^O}}1		{Û}{{\^U}}1
+	{œ}{{\oe}}1		{Œ}{{\OE}}1
+	{æ}{{\ae}}1		{Æ}{{\AE}}1
+	{ß}{{\ss}}1		{ç}{{\c c}}1
+	{Ç}{{\c C}}1	{ø}{{\o}}1
+	{å}{{\r a}}1	{Å}{{\r A}}1
+	{€}{{\EUR}}1	{£}{{\pounds}}1
+}
+
+% ***************************************************************************************************
+% Marginesy 
+% ***************************************************************************************************
+
+% Ustawienia rozmiarów stron i ich marginesów
+\usepackage[headheight=18pt, top=25mm, bottom=25mm, left=25mm, right=25mm]{geometry}
+% headheight		-	wysokość tytułów
+% top				-	margines górny
+% bottom			-	margines dolny
+% left				-	margines lewy
+% right				-	margines prawy
+
+% Usunięcie górnego marginesu dla środowisk
+\makeatletter
+\setlength\@fptop{0\p@}	
+\makeatother
+
+% ***************************************************************************************************
+% Styl 
+% ***************************************************************************************************
+
+% Definiuje środowisko 'titlingpage', które zapewnia pełną kontrolę nad układem strony tytułowej.
+\usepackage{titling}
+
+
+% Umożliwia modyfikowanie stylu spisu treści
+\usepackage{tocloft}	
+
+\tocloftpagestyle{tableOfContentStyle}
+
+% Definiowanie własnych stylów nagłówków i/lub stopek
+\usepackage{fancyhdr}
+
+% Umożliwia wstawianie hiperłączy do dokumentu
+\usepackage{hyperref}							% Aktywuje linki
+
+% Umożliwia zdefiniowanie własnego stylu wyliczeniowego
+\usepackage{enumitem}
+
+% Dołączanie rysunków
+\usepackage{graphicx}
+
+% Figury i przypisy
+\usepackage{caption}
+\usepackage{subcaption}
+
+% Umożliwia tworzenie przypisów wewnątrz środowisk
+\usepackage{footnote}
+
+% Umożliwia tworzenie struktur katalogów
+\usepackage{dirtree}
+
+% Rozciąganie komórek tabeli na wiele wierszy
+\usepackage{multirow}
+
+% Precyzyjne obliczenia szerokości/wysokości dowolnego fragmentu wygenerowanego przez LaTeX
+\usepackage{calc}
+
+% Numerowanie z wieloma poziomami zagłębienia
+\usepackage{outlines}
+
+% Pozycjonowanie zdjęcia na stronie i opływanie go tekstem
+\usepackage{float}
+\usepackage{wrapfig}
+
+% ***************************************************************************************************
+% Matematyczne skróty
+% ***************************************************************************************************
+
+% Skrócony symbol liczb rzeczywistych
+\newcommand{\RR}{\mathbb{R}}
+
+% Skrócony symbol liczb naturalnych
+\newcommand{\NN}{\mathbb{N}}
+
+% Skrócony symbol liczb wymiernych
+\newcommand{\QQ}{\mathbb{Q}}
+
+% Skrócony symbol liczb całkowitych
+\newcommand{\ZZ}{\mathbb{Z}}
+
+% Skrócony symbol logicznej implikacji
+\newcommand{\IMP}{\rightarrow}
+
+% Skrócony symbol  logicznej równoważności
+\newcommand{\IFF}{\leftrightarrow}
+
+% ***************************************************************************************************
+% Dokument
+% ***************************************************************************************************
+
+\frontmatter
+
+\title{Sprawozdanie\\Wprowadzenie do Sztucznej Inteligencji\\Labolatoria 1}
+\author{Kamil Matejuk}
+\date{11.11.2021r}
+\begin{document}
+	\pagenumbering{arabic}
+    \maketitle
+    \input{tresc.tex}
+\end{document}
+
