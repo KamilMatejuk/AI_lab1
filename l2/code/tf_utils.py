@@ -25,7 +25,6 @@ class Model:
     def set_layers(self, layers: list):
         # input and output always the same
         self.model = tf.keras.Sequential([
-                tf.keras.layers.Flatten(input_shape=(28, 28)),
                 *layers,
                 tf.keras.layers.Dense(10)
             ], name=self.id)
@@ -70,10 +69,22 @@ class Model:
             ax1.set_ylabel('loss', color=loss_color)
             ax1.plot(tics, loss, color=loss_color)
             ax1.tick_params(axis='y', labelcolor=loss_color)
+            for i,j in zip(tics, loss):
+                ax1.annotate(f'{j:.3f}',
+                             xy=(i,j),
+                             xytext=(0,1),
+                             textcoords='offset points',
+                             color=loss_color)
             ax2 = ax1.twinx()
             ax2.set_ylabel('accuracy', color=accuracy_color)
             ax2.plot(tics, accuracy, color=accuracy_color)
             ax2.tick_params(axis='y', labelcolor=accuracy_color)
+            for i,j in zip(tics, accuracy):
+                ax2.annotate(f'{j:.3f}',
+                             xy=(i,j),
+                             xytext=(0,-7),
+                             textcoords='offset points',
+                             color=accuracy_color)
             fig.tight_layout()
             figure = plt.gcf()
             figure.set_size_inches(10, 3)

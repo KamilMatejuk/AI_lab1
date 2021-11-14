@@ -1,11 +1,11 @@
 {
     "bs": 8,
     "epochs": 10,
-    "name": "dense128relu_adam_10_8",
+    "name": "dense128relu_adam_20_8",
     "optimizer": "adam"
 }
-MNIST             -> loss: 0.10239 accuracy 0.97850
-MY_1              -> loss: 7.78980 accuracy 0.30000
-MY_2              -> loss: 7.82245 accuracy 0.20000
-MY_1_PREPROCESSED -> loss: 2.14212 accuracy 0.70000
-MY_2_PREPROCESSED -> loss: 6.19720 accuracy 0.53333
+MNIST             -> loss: 0.10199 accuracy 0.97870
+MY_1              -> loss: 6.91979 accuracy 0.26667
+MY_2              -> loss: 7.16284 accuracy 0.16667
+MY_1_PREPROCESSED -> loss: 3.42912 accuracy 0.60000
+MY_2_PREPROCESSED -> loss: 4.88233 accuracy 0.56667

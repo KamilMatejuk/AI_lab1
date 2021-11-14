@@ -1,0 +1,11 @@
+{
+    "bs": 8,
+    "epochs": 10,
+    "name": "conv2d32relu_maxpool2d_conv2d32relu_maxpool2d_conv2d32relu_maxpool2d_adam_10_8",
+    "optimizer": "adam"
+}
+MNIST             -> loss: 0.07917 accuracy 0.98960
+MY_1              -> loss: 6.09982 accuracy 0.30000
+MY_2              -> loss: 5.27149 accuracy 0.40000
+MY_1_PREPROCESSED -> loss: 1.68219 accuracy 0.80000
+MY_2_PREPROCESSED -> loss: 2.70290 accuracy 0.70000

@@ -124,17 +124,15 @@ def extract_data_from_photo(img_path: str, preprocess: bool):
     ########################## convert to (20 x 20) ###########################
     w = len(pixels[0])
     h = len(pixels)
-    scale = math.ceil(max(w, h) / 20)
+    im = Image.new('L', (w, h))
+    im.putdata(sum(pixels, []))
     scaled_pixels = []
+    scale = max(w, h) / 20
     w = math.ceil(w/scale)
     h = math.ceil(h/scale)
-    for i in range(h):
-        for j in range(w):
-            if scale > 1:
-                subset = [[p for p in row[scale*j:scale*(j+1)-1]] for row in pixels[scale*i:scale*(i+1)-1]]
-            else:
-                subset = [[pixels[i][j]]]
-            scaled_pixels.append(max(sum(subset, [])))
+    im = im.resize((w, h), Image.ANTIALIAS)
+    w, h = im.size
+    scaled_pixels = im.getdata()
     ################################# negate ##################################
     enhanced_pixels = []
     for p in scaled_pixels:
@@ -146,7 +144,8 @@ def extract_data_from_photo(img_path: str, preprocess: bool):
     while i < h:
         j = 0
         while j < w:
-            empty_pixels[int((28-h)/2) + i][int((28-w)/2) + j] = enhanced_pixels[w*i+j]
+            p = enhanced_pixels[w*i+j]
+            empty_pixels[int((28-h)/2) + i][int((28-w)/2) + j] = p
             j += 1
         i += 1
     

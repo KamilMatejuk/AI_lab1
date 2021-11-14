@@ -56,76 +56,79 @@ if __name__ == '__main__':
                          f'{preview_path}/my_2_preprocessed.png')
     
     options = [
-        #### batch size
-        # {
-        #     'name': 'dense128relu_adam_10_8',
-        #     'layers': [tf.keras.layers.Dense(128, activation='relu')],
-        #     'optimizer': 'adam',
-        #     'epochs': 10,
-        #     'bs': 8
-        # },
-        # {
-        #     'name': 'dense128relu_adam_10_16',
-        #     'layers': [tf.keras.layers.Dense(128, activation='relu')],
-        #     'optimizer': 'adam',
-        #     'epochs': 10,
-        #     'bs': 16
-        # },
-        # {
-        #     'name': 'dense128relu_adam_10_32',
-        #     'layers': [tf.keras.layers.Dense(128, activation='relu')],
-        #     'optimizer': 'adam',
-        #     'epochs': 10,
-        #     'bs': 32
-        # },
-        # {
-        #     'name': 'dense128relu_adam_10_64',
-        #     'layers': [tf.keras.layers.Dense(128, activation='relu')],
-        #     'optimizer': 'adam',
-        #     'epochs': 10,
-        #     'bs': 64
-        # },
-        #### epochs
-        # {
-        #     'name': 'dense128relu_adam_5_8',
-        #     'layers': [tf.keras.layers.Dense(128, activation='relu')],
-        #     'optimizer': 'adam',
-        #     'epochs': 5,
-        #     'bs': 8
-        # },
-        # {
-        #     'name': 'dense128relu_adam_10_8',
-        #     'layers': [tf.keras.layers.Dense(128, activation='relu')],
-        #     'optimizer': 'adam',
-        #     'epochs': 10,
-        #     'bs': 8
-        # },
-        # {
-        #     'name': 'dense128relu_adam_15_8',
-        #     'layers': [tf.keras.layers.Dense(128, activation='relu')],
-        #     'optimizer': 'adam',
-        #     'epochs': 15,
-        #     'bs': 8
-        # },
-        # {
-        #     'name': 'dense128relu_adam_20_8',
-        #     'layers': [tf.keras.layers.Dense(128, activation='relu')],
-        #     'optimizer': 'adam',
-        #     'epochs': 20,
-        #     'bs': 8
-        # },
         #### layers
         # {
-        #     'name': 'dense196relu_dense49relu_adam_20_8',
-        #     'layers': [tf.keras.layers.Dense(196, activation='relu'),
+        #     'name': 'dense64relu_adam_10_8',
+        #     'layers': [tf.keras.layers.Flatten(input_shape=(28, 28)),
+        #                tf.keras.layers.Dense(64, activation='relu')]
+        #     'optimizer': 'adam',
+        #     'epochs': 10,
+        #     'bs': 8
+        # },
+        # {
+        #     'name': 'dense128relu_adam_10_8',
+        #     'layers': [tf.keras.layers.Flatten(input_shape=(28, 28)),
+        #                tf.keras.layers.Dense(128, activation='relu')],
+        #     'optimizer': 'adam',
+        #     'epochs': 10,
+        #     'bs': 8
+        # },
+        # {
+        #     'name': 'dense256relu_adam_10_8',
+        #     'layers': [tf.keras.layers.Flatten(input_shape=(28, 28)),
+        #                tf.keras.layers.Dense(256, activation='relu')],
+        #     'optimizer': 'adam',
+        #     'epochs': 10,
+        #     'bs': 8
+        # },
+        # {
+        #     'name': 'dense196relu_dense49relu_adam_10_8',
+        #     'layers': [tf.keras.layers.Flatten(input_shape=(28, 28)),
+        #                tf.keras.layers.Dense(196, activation='relu'),
         #                tf.keras.layers.Dense(49, activation='relu')],
         #     'optimizer': 'adam',
-        #     'epochs': 20,
+        #     'epochs': 10,
+        #     'bs': 8
+        # },
+        # {
+        #     'name': 'dense392relu_dense98relu_dense24relu_adam_10_8',
+        #     'layers': [tf.keras.layers.Flatten(input_shape=(28, 28)),
+        #                tf.keras.layers.Dense(392, activation='relu'),
+        #                tf.keras.layers.Dense(98, activation='relu'),
+        #                tf.keras.layers.Dense(24, activation='relu')],
+        #     'optimizer': 'adam',
+        #     'epochs': 10,
+        #     'bs': 8
+        # },
+        # {
+        #     'name': 'conv2d32relu_maxpool2d_adam_10_8',
+        #     'layers': [tf.keras.layers.Conv2D(32, kernel_size=5, activation='relu', input_shape=(28, 28, 1)),
+        #                tf.keras.layers.MaxPool2D(),
+        #                tf.keras.layers.Flatten()],
+        #     'optimizer': 'adam',
+        #     'epochs': 10,
+        #     'bs': 8
+        # },
+        # {
+        #     'name': 'conv2d32relu_maxpool2d_conv2d32relu_maxpool2d_adam_10_8',
+        #     'layers': [tf.keras.layers.Conv2D(32, kernel_size=5, activation='relu', input_shape=(28, 28, 1)),
+        #                tf.keras.layers.MaxPool2D(),
+        #                tf.keras.layers.Conv2D(32, kernel_size=4, activation='relu'),
+        #                tf.keras.layers.MaxPool2D(),
+        #                tf.keras.layers.Flatten()],
+        #     'optimizer': 'adam',
+        #     'epochs': 10,
         #     'bs': 8
         # },
         {
-            'name': 'default',
-            'layers': [tf.keras.layers.Dense(196, activation='relu')],
+            'name': 'conv2d32relu_maxpool2d_conv2d32relu_maxpool2d_conv2d32relu_maxpool2d_adam_10_8',
+            'layers': [tf.keras.layers.Conv2D(32, kernel_size=5, activation='relu', input_shape=(28, 28, 1)),
+                       tf.keras.layers.MaxPool2D(),
+                       tf.keras.layers.Conv2D(32, kernel_size=4, activation='relu'),
+                       tf.keras.layers.MaxPool2D(),
+                       tf.keras.layers.Conv2D(32, kernel_size=3, activation='relu'),
+                       tf.keras.layers.MaxPool2D(),
+                       tf.keras.layers.Flatten()],
             'optimizer': 'adam',
             'epochs': 10,
             'bs': 8
@@ -144,10 +147,11 @@ if __name__ == '__main__':
         m = Model(o['name'])
         m.set_layers(o['layers'])
         m.set_optimizer(o['optimizer'])
-        m.create(load_from_checkpoint=False)
-        # m.show()
-        m.train(ds_train_images, ds_train_labels, o['epochs'], o['bs'])
-        m.save_train_history(f'{results_path}/{o["name"]}')
+        # m.create(load_from_checkpoint=False)
+        m.create(load_from_checkpoint=True)
+        m.show()
+        # m.train(ds_train_images, ds_train_labels, o['epochs'], o['bs'])
+        # m.save_train_history(f'{results_path}/{o["name"]}')
         with open(f'{results_path}/{o["name"]}/config', 'w+') as f:
             del o['layers']
             f.write(json.dumps(o, indent=4, sort_keys=True) + '\n')
