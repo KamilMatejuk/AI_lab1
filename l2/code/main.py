@@ -6,61 +6,156 @@ tf.get_logger().setLevel('ERROR')
 tf.autograph.set_verbosity(0)
 #### END: hide tensorflow output
 
+import json
 import matplotlib.pyplot as plt
 from tf_utils import Model
 from io_utils import get_mnist_data, get_photos_data
 
-# def show_image(image):
-#     plt.figure()
-#     plt.imshow(image)
-#     plt.colorbar()
-#     plt.grid(False)
-#     plt.show()
 
-def show_multiple_images(images, labels):
-    plt.figure(figsize=(10,10))
+def save_multiple_images(images, labels, filepath):
+    plt.figure(figsize=(5, 6))
     for i in range(30):
         plt.subplot(5,6,i+1)
         plt.xticks([])
         plt.yticks([])
         plt.grid(False)
-        im = plt.imshow(images[i])
-        plt.colorbar(im)
+        plt.imshow(images[i])
         plt.xlabel(labels[i])
-    plt.show()
+    plt.savefig(filepath)
+    plt.clf()
+    plt.close()
 
 # TODO
-# wybranie parametrów do sprawdzenia
 # wizualizacja uczenia
 
 
 if __name__ == '__main__':
+    ### collect data
     ds_train_images, ds_train_labels, ds_test_images_1, ds_test_labels_1 = get_mnist_data()
-    # raw data
     ds_test_images_2, ds_test_labels_2 = get_photos_data('my_1') # my dataset 1
     ds_test_images_3, ds_test_labels_3 = get_photos_data('my_2') # my dataset 2
-    # preprocessed data
     ds_test_images_2_preprocessed, ds_test_labels_2_preprocessed = get_photos_data('my_1', preprocess=True) # my dataset 1
     ds_test_images_3_preprocessed, ds_test_labels_3_preprocessed = get_photos_data('my_2', preprocess=True) # my dataset 2
     
-    # show_multiple_images(ds_test_images_2, ds_test_labels_2)
-    # show_multiple_images(ds_test_images_2_preprocessed, ds_test_labels_2_preprocessed)
-    # show_multiple_images(ds_test_images_3, ds_test_labels_3)
-    # show_multiple_images(ds_test_images_3_preprocessed, ds_test_labels_3_preprocessed)
-    # exit()
+    ### save data preview
+    preview_path = os.path.join(
+                os.path.dirname(
+                    os.path.dirname(
+                        os.path.abspath(__file__)
+                    )
+                ), 'dataset', 'preview')
+    os.system(f'mkdir -p {preview_path}')
+    save_multiple_images(ds_test_images_2,
+                         ds_test_labels_2,
+                         f'{preview_path}/my_1.png')
+    save_multiple_images(ds_test_images_2_preprocessed,
+                         ds_test_labels_2_preprocessed,
+                         f'{preview_path}/my_1_preprocessed.png')
+    save_multiple_images(ds_test_images_3,
+                         ds_test_labels_3,
+                         f'{preview_path}/my_2.png')
+    save_multiple_images(ds_test_images_3_preprocessed,
+                         ds_test_labels_3_preprocessed,
+                         f'{preview_path}/my_2_preprocessed.png')
     
-    m = Model('default')
-    m.set_layers([tf.keras.layers.Dense(128, activation='relu')])
-    m.set_optimizer('adam')
-    m.set_loss(tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True))
-    m.create()
-    m.show()
-    # m.train(ds_train_images, ds_train_labels, 10, 16)
-    m.test(ds_test_images_1, ds_test_labels_1) # test mnist data
-    # raw data
-    m.test(ds_test_images_2, ds_test_labels_2) # test my data
-    m.test(ds_test_images_3, ds_test_labels_3) # test collegue data
-    # preprocessed
-    m.test(ds_test_images_2_preprocessed, ds_test_labels_2_preprocessed) # test my data
-    m.test(ds_test_images_3_preprocessed, ds_test_labels_3_preprocessed) # test collegue data
+    options = [
+        #### batch size
+        # {
+        #     'name': 'dense128relu_adam_10_8',
+        #     'layers': [tf.keras.layers.Dense(128, activation='relu')],
+        #     'optimizer': 'adam',
+        #     'epochs': 10,
+        #     'bs': 8
+        # },
+        # {
+        #     'name': 'dense128relu_adam_10_16',
+        #     'layers': [tf.keras.layers.Dense(128, activation='relu')],
+        #     'optimizer': 'adam',
+        #     'epochs': 10,
+        #     'bs': 16
+        # },
+        # {
+        #     'name': 'dense128relu_adam_10_32',
+        #     'layers': [tf.keras.layers.Dense(128, activation='relu')],
+        #     'optimizer': 'adam',
+        #     'epochs': 10,
+        #     'bs': 32
+        # },
+        # {
+        #     'name': 'dense128relu_adam_10_64',
+        #     'layers': [tf.keras.layers.Dense(128, activation='relu')],
+        #     'optimizer': 'adam',
+        #     'epochs': 10,
+        #     'bs': 64
+        # },
+        #### epochs
+        # {
+        #     'name': 'dense128relu_adam_5_8',
+        #     'layers': [tf.keras.layers.Dense(128, activation='relu')],
+        #     'optimizer': 'adam',
+        #     'epochs': 5,
+        #     'bs': 8
+        # },
+        # {
+        #     'name': 'dense128relu_adam_10_8',
+        #     'layers': [tf.keras.layers.Dense(128, activation='relu')],
+        #     'optimizer': 'adam',
+        #     'epochs': 10,
+        #     'bs': 8
+        # },
+        # {
+        #     'name': 'dense128relu_adam_15_8',
+        #     'layers': [tf.keras.layers.Dense(128, activation='relu')],
+        #     'optimizer': 'adam',
+        #     'epochs': 15,
+        #     'bs': 8
+        # },
+        # {
+        #     'name': 'dense128relu_adam_20_8',
+        #     'layers': [tf.keras.layers.Dense(128, activation='relu')],
+        #     'optimizer': 'adam',
+        #     'epochs': 20,
+        #     'bs': 8
+        # },
+        #### layers
+        {
+            'name': 'dense196relu_dense49relu_adam_20_8',
+            'layers': [tf.keras.layers.Dense(196, activation='relu'),
+                       tf.keras.layers.Dense(49, activation='relu')],
+            'optimizer': 'adam',
+            'epochs': 20,
+            'bs': 8
+        },
+    ]
+    ### run tests
+    results_path = os.path.join(
+                os.path.dirname(
+                    os.path.dirname(
+                        os.path.abspath(__file__)
+                    )
+                ), 'results')
+    os.system(f'mkdir -p {results_path}')
+    for o in options:
+        os.system(f'mkdir -p {results_path}/{o["name"]}')
+        m = Model(o['name'])
+        m.set_layers(o['layers'])
+        m.set_optimizer(o['optimizer'])
+        m.create(load_from_checkpoint=False)
+        # m.show()
+        m.train(ds_train_images, ds_train_labels, o['epochs'], o['bs'])
+        m.save_train_history(f'{results_path}/{o["name"]}')
+        with open(f'{results_path}/{o["name"]}/config', 'w+') as f:
+            del o['layers']
+            f.write(json.dumps(o, indent=4, sort_keys=True) + '\n')
+            loss, accuracy = m.test(ds_test_images_1, ds_test_labels_1)
+            f.write(f'MNIST             -> loss: {loss:.5f} accuracy {accuracy:.5f}\n')
+            loss, accuracy = m.test(ds_test_images_2, ds_test_labels_2)
+            f.write(f'MY_1              -> loss: {loss:.5f} accuracy {accuracy:.5f}\n')
+            loss, accuracy = m.test(ds_test_images_3, ds_test_labels_3)
+            f.write(f'MY_2              -> loss: {loss:.5f} accuracy {accuracy:.5f}\n')
+            loss, accuracy = m.test(ds_test_images_2_preprocessed, ds_test_labels_2_preprocessed)
+            f.write(f'MY_1_PREPROCESSED -> loss: {loss:.5f} accuracy {accuracy:.5f}\n')
+            loss, accuracy = m.test(ds_test_images_3_preprocessed, ds_test_labels_3_preprocessed)
+            f.write(f'MY_2_PREPROCESSED -> loss: {loss:.5f} accuracy {accuracy:.5f}\n')
+
     
