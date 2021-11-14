@@ -1,6 +1,7 @@
 import os
 import math
 import numpy as np
+import matplotlib.pyplot as plt
 from PIL import Image, ImageEnhance
 
 
@@ -53,10 +54,10 @@ def get_mnist_data():
     return (ds_train_images, ds_train_labels, ds_test_images, ds_test_labels)
 
 def extract_data_from_photo(img_path: str, preprocess: bool):
-    # read pixels
+    ############################ read pixels ##################################
     im = Image.open(img_path, 'r')
-    # im = ImageEnhance.Sharpness(im).enhance(0.25)
     im = ImageEnhance.Contrast(im).enhance(10)
+    ########################## default preprocess #############################
     if not preprocess:
         im = im.resize((28, 28))
         pixels = [[1 for _ in range(28)] for _ in range(28)]
@@ -67,14 +68,14 @@ def extract_data_from_photo(img_path: str, preprocess: bool):
             # normalize
             p = p/255.0
             # enhance
-            p = 0 if p < 0.15 else 1
+            p = 0 if p < 0.1 else 1
             # negate
             p = 1 - p
             # save
             pixels[int(i/28)][int(i%28)] = p
             i += 1
         return pixels
-        
+    ########################## advanced preprocess ############################
     w, h = im.size
     pixels = [[1 for _ in range(w)] for _ in range(h)]
     i = 0
@@ -88,7 +89,7 @@ def extract_data_from_photo(img_path: str, preprocess: bool):
         # save
         pixels[int(i/w)][int(i%w)] = p
         i += 1
-    # find binding box
+    ########################### find bounding box #############################
     # top border
     try:
         for row_index_top, row in enumerate(pixels):
@@ -120,7 +121,7 @@ def extract_data_from_photo(img_path: str, preprocess: bool):
     if col_index_left < col_index_right:
         if row_index_top < len(pixels) - row_index_bottom:
             pixels = [[p for p in row[col_index_left:col_index_right]] for row in pixels[row_index_top:len(pixels)-row_index_bottom]]
-    # convert to size (20 x 20)
+    ########################## convert to (20 x 20) ###########################
     w = len(pixels[0])
     h = len(pixels)
     scale = math.ceil(max(w, h) / 20)
@@ -134,14 +135,12 @@ def extract_data_from_photo(img_path: str, preprocess: bool):
             else:
                 subset = [[pixels[i][j]]]
             scaled_pixels.append(max(sum(subset, [])))
-    # enhance black white difference
+    ################################# negate ##################################
     enhanced_pixels = []
     for p in scaled_pixels:
-        # negate
         p = 1 - p
         enhanced_pixels.append(p)
-    
-    # fill to size (28 x 28)
+    ########################### fill to (28 x 28) #############################
     empty_pixels = [[0.0 for _ in range(28)] for _ in range(28)]
     i = 0
     while i < h:
@@ -169,3 +168,11 @@ def get_photos_data(folder: str, preprocess=False):
             ds_labels.append(int(img.split('_')[0]))
     return (np.array(ds_images).astype('float32'),
             np.array(ds_labels).astype('float32'))
+
+
+if __name__ == '__main__':
+    data = extract_data_from_photo('../dataset/my_1/0_1.png', True)
+    plt.imshow(data)
+    plt.show()
+    plt.clf()
+    plt.close()

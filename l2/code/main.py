@@ -25,9 +25,6 @@ def save_multiple_images(images, labels, filepath):
     plt.clf()
     plt.close()
 
-# TODO
-# wizualizacja uczenia
-
 
 if __name__ == '__main__':
     ### collect data
@@ -118,12 +115,19 @@ if __name__ == '__main__':
         #     'bs': 8
         # },
         #### layers
+        # {
+        #     'name': 'dense196relu_dense49relu_adam_20_8',
+        #     'layers': [tf.keras.layers.Dense(196, activation='relu'),
+        #                tf.keras.layers.Dense(49, activation='relu')],
+        #     'optimizer': 'adam',
+        #     'epochs': 20,
+        #     'bs': 8
+        # },
         {
-            'name': 'dense196relu_dense49relu_adam_20_8',
-            'layers': [tf.keras.layers.Dense(196, activation='relu'),
-                       tf.keras.layers.Dense(49, activation='relu')],
+            'name': 'default',
+            'layers': [tf.keras.layers.Dense(196, activation='relu')],
             'optimizer': 'adam',
-            'epochs': 20,
+            'epochs': 10,
             'bs': 8
         },
     ]

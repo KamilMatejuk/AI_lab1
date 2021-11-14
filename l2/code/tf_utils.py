@@ -59,34 +59,20 @@ class Model:
             # loss
             loss = self.history.history['loss']
             loss_color = 'red'
-            plt.plot([i+1 for i in range(len(loss))], loss, color=loss_color)
-            plt.xlabel('epochs')
-            plt.ylabel('loss')
-            figure = plt.gcf()
-            figure.set_size_inches(10, 3)
-            plt.savefig(f'{filedir}/loss', dpi=100)
-            plt.clf()
-            plt.close()
             # accuracy
             accuracy = self.history.history['accuracy']
             accuracy_color = 'blue'
-            plt.plot([i+1 for i in range(len(accuracy))], accuracy, color=accuracy_color)
-            plt.xlabel('epochs')
-            plt.ylabel('accuracy')
-            figure = plt.gcf()
-            figure.set_size_inches(10, 3)
-            plt.savefig(f'{filedir}/accuracy', dpi=100)
-            plt.clf()
-            plt.close()
             # both
+            tics = [i+1 for i in range(len(loss))]
             fig, ax1 = plt.subplots()
             ax1.set_xlabel('epochs')
+            ax1.set_xticks(tics)
             ax1.set_ylabel('loss', color=loss_color)
-            ax1.plot([i+1 for i in range(len(loss))], loss, color=loss_color)
+            ax1.plot(tics, loss, color=loss_color)
             ax1.tick_params(axis='y', labelcolor=loss_color)
             ax2 = ax1.twinx()
             ax2.set_ylabel('accuracy', color=accuracy_color)
-            ax2.plot([i+1 for i in range(len(accuracy))], accuracy, color=accuracy_color)
+            ax2.plot(tics, accuracy, color=accuracy_color)
             ax2.tick_params(axis='y', labelcolor=accuracy_color)
             fig.tight_layout()
             figure = plt.gcf()
