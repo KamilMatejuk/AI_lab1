@@ -17,7 +17,7 @@ Solver::Solver(Puzzle& puzzle) {
     clear_path();
 }
 
-int Solver::heuristic(int number_of_heuristic, Puzzle& puzzle) {
+float Solver::heuristic(int number_of_heuristic, Puzzle& puzzle) {
     switch(number_of_heuristic) {
         case 1: return heuristic1(puzzle);
         case 2: return heuristic2(puzzle);
@@ -37,9 +37,9 @@ void Solver::solve(int number_of_heuristic) {
         int min_h = numeric_limits<int>::max();
         for (int i = 0; i < states_to_visit.size(); i++) {
             Puzzle state = states_to_visit[i];
-            int g = state.solution_path_size;
-            int h = heuristic(number_of_heuristic, state);
-            int f = g + h;
+            float g = (float)state.solution_path_size;
+            float h = heuristic(number_of_heuristic, state);
+            float f = g + h;
             if (f < min_f) {
                 min_f = f;
                 min_g = g;
@@ -81,12 +81,12 @@ bool Solver::check_successor(Puzzle& succ, Direction move, int number_of_heurist
         return true;
     }
     // f = g + h
-    int succ_f = succ.solution_path_size + heuristic(number_of_heuristic, succ);
+    float succ_f = succ.solution_path_size + heuristic(number_of_heuristic, succ);
     // check if already in list to visit with lower value
     bool already_exists_with_lower_f = false;
     for (Puzzle state : states_to_visit) {
         if (state.short_state_repr() == succ.short_state_repr()) {
-            int state_f = state.solution_path_size + heuristic(number_of_heuristic, state);
+            float state_f = state.solution_path_size + heuristic(number_of_heuristic, state);
             if (state_f < succ_f) {
                 already_exists_with_lower_f = true;
                 break;
@@ -100,7 +100,7 @@ bool Solver::check_successor(Puzzle& succ, Direction move, int number_of_heurist
     already_exists_with_lower_f = false;
     for (Puzzle state : visited_states) {
         if (state.short_state_repr() == succ.short_state_repr()) {
-            int state_f = state.solution_path_size + heuristic(number_of_heuristic, state);
+            float state_f = state.solution_path_size + heuristic(number_of_heuristic, state);
             if (state_f < succ_f) {
                 already_exists_with_lower_f = true;
                 break;

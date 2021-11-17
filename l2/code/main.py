@@ -157,13 +157,18 @@ if __name__ == '__main__':
             f.write(json.dumps(o, indent=4, sort_keys=True) + '\n')
             loss, accuracy = m.test(ds_test_images_1, ds_test_labels_1)
             f.write(f'MNIST             -> loss: {loss:.5f} accuracy {accuracy:.5f}\n')
+            print(f'MNIST             -> loss: {loss:.5f} accuracy {accuracy:.5f}')
             loss, accuracy = m.test(ds_test_images_2, ds_test_labels_2)
             f.write(f'MY_1              -> loss: {loss:.5f} accuracy {accuracy:.5f}\n')
+            print(f'MY_1              -> loss: {loss:.5f} accuracy {accuracy:.5f}')
             loss, accuracy = m.test(ds_test_images_3, ds_test_labels_3)
             f.write(f'MY_2              -> loss: {loss:.5f} accuracy {accuracy:.5f}\n')
+            print(f'MY_2              -> loss: {loss:.5f} accuracy {accuracy:.5f}')
             loss, accuracy = m.test(ds_test_images_2_preprocessed, ds_test_labels_2_preprocessed)
             f.write(f'MY_1_PREPROCESSED -> loss: {loss:.5f} accuracy {accuracy:.5f}\n')
+            print(f'MY_1_PREPROCESSED -> loss: {loss:.5f} accuracy {accuracy:.5f}')
             loss, accuracy = m.test(ds_test_images_3_preprocessed, ds_test_labels_3_preprocessed)
             f.write(f'MY_2_PREPROCESSED -> loss: {loss:.5f} accuracy {accuracy:.5f}\n')
+            print(f'MY_2_PREPROCESSED -> loss: {loss:.5f} accuracy {accuracy:.5f}')
 
     

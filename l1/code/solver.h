@@ -35,7 +35,7 @@ class Solver {
         clock_t start_time;
         
         Solver(Puzzle& puzzle);
-        int heuristic(int number_of_heuristic, Puzzle& puzzle);
+        float heuristic(int number_of_heuristic, Puzzle& puzzle);
         void solve(int number_of_heuristic);
         bool check_successor(Puzzle& succ, Direction move, int number_of_heuristic);
         string get_path();
