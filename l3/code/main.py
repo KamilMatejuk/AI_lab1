@@ -21,7 +21,7 @@ def run_for_k(k: int):
         
         cluster = Clustering(k, results_path, verbose=('-v' in sys.argv))
         # divide into clusters (5 tries)
-        cluster.train(ds_train_images, ds_train_labels, 5, 500)
+        cluster.train(ds_train_images, ds_train_labels, 5, 1500)
         # save mean values, inertion etc
         cluster.save()
         # show accuracy (matrix k x 10)
@@ -49,6 +49,6 @@ def run_for_k(k: int):
 
 
 if __name__ == '__main__':
-    with MyPool(2) as pool:
-        pool.map(run_for_k, (7, 8, 9, 10, 11, 12))
-    # run_for_k(7)
+    # with MyPool(2) as pool:
+    #     pool.map(run_for_k, (7, 8, 9, 10, 11, 12))
+    run_for_k(10)

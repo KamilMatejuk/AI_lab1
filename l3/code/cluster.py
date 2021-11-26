@@ -59,7 +59,7 @@ class Clustering:
                 cluster_index, _, _ = cls.__get_nearest_cluster(image, clusters)
                 images_clusters.append(cluster_index)
             # update clusters to be average of its images
-            print(f'(clusters {k}, try {i}, iteration {j}) {images_clusters[:15]}')
+            print(f'(clusters {k}, try {i}, iteration {j})')
             for cluster_index, cluster in enumerate(clusters):
                 clusters[cluster_index] = cls.__get_average_of_cluster_images(
                     cluster_index, ds_images, images_clusters)
@@ -78,7 +78,8 @@ class Clustering:
         # reshape
         ds_images = ds_images.reshape(len(ds_images), -1)
         # run multiple tries
-        with Pool(math.ceil(n_tries/2.0)) as pool:
+        # with Pool(math.ceil(n_tries/2.0)) as pool:
+        with Pool(n_tries) as pool:
             results = pool.map(eval_func_tuple, [(Clustering.clustering, ds_images, i, n_iter, self.k) for i in range(n_tries)])
         self.minimal_inertia = math.inf
         self.best_clusters = None
