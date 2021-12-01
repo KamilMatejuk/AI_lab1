@@ -51,5 +51,5 @@ def run_for_k(k: int):
 
 if __name__ == '__main__':
     with MyPool(2) as pool:
-        pool.map(run_for_k, (7, 8, 9, 11, 12))
+        pool.map(run_for_k, (7, 8, 9, 10, 11, 12))
     # run_for_k(7)
