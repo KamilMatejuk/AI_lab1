@@ -46,11 +46,27 @@ class Clustering:
         else:
             images = np.average(clustered_images, axis=0)
         return images
+    
+    @classmethod
+    def __select_starting_clusters(cls, ds_images: np.ndarray, k: int):
+        clusters = ds_images[random.randint(0, len(ds_images)-1)].reshape(1, -1)
+        while len(clusters) != k:
+            probabilities = []
+            for image in ds_images:
+                _, _, distance_to_nearest_cluster = cls.__get_nearest_cluster(image, clusters)
+                probabilities.append(distance_to_nearest_cluster * distance_to_nearest_cluster)
+            p_sum = sum(probabilities)
+            probabilities = [p/p_sum for p in probabilities]
+            idx = np.random.choice(range(len(ds_images)), p=probabilities)
+            clusters = np.append(clusters, [ds_images[idx]], axis=0)
+        return clusters
 
     @classmethod
-    def clustering(cls, ds_images: np.ndarray, i: int, n_iter: int, k: int):
+    def clustering(cls, ds_images: np.ndarray, i: int, n_iter: int, k: int, results_path: str):
         # select k starting clusters
-        clusters = ds_images[random.sample(range(len(ds_images)), k)]
+        # clusters = ds_images[random.sample(range(len(ds_images)), k)]
+        clusters = cls.__select_starting_clusters(ds_images, k)
+        cls.show_centroids(None, 'centroids_start.png', clusters, results_path)
         # look for best configuration
         for j in range(n_iter):
             # divide elements into clusters
@@ -78,9 +94,8 @@ class Clustering:
         # reshape
         ds_images = ds_images.reshape(len(ds_images), -1)
         # run multiple tries
-        # with Pool(math.ceil(n_tries/2.0)) as pool:
         with Pool(n_tries) as pool:
-            results = pool.map(eval_func_tuple, [(Clustering.clustering, ds_images, i, n_iter, self.k) for i in range(n_tries)])
+            results = pool.map(eval_func_tuple, [(Clustering.clustering, ds_images, i, n_iter, self.k, self.results_path) for i in range(n_tries)])
         self.minimal_inertia = math.inf
         self.best_clusters = None
         for inertia, clusters in results:
@@ -124,17 +139,20 @@ class Clustering:
                 cluster_labels.append(dict(Counter(labels)))
         else: cluster_labels = self.cluster_labels
         for i, lab in enumerate(cluster_labels):
-            all_items = sum(lab[key] for key in lab)
-            for key in lab:
-                accuracy[i, int(key)] = 100 * float(lab[key]) / all_items if all_items > 0 else 0.0
+            try:
+                all_items = sum(lab[key] for key in lab)
+                max_label = int(float(max(lab, key=lab.get)))
+                for key in lab:
+                    accuracy[max_label, 9-int(float(key))] = 100 * float(lab[key]) / all_items if all_items > 0 else 0.0
+            except: pass
         with open(os.path.join(self.results_path, f'accuracy - {filename}.txt'), 'w+') as f:
             for row in accuracy:
                 f.write(str(row) + '\n')
         plt.figure()
-        plt.xticks([i+1 for i in range(10)])
-        plt.yticks([i+1 for i in range(self.k)])
+        plt.xticks([i for i in range(10)])
+        plt.yticks([i for i in range(self.k)])
         plt.grid(False)
-        plt.imshow(accuracy, extent=[0.5, 10.5, 0.5, self.k + 0.5], vmin=0, vmax=100)
+        plt.imshow(accuracy, extent=[-0.5, 9.5, -0.5, self.k - 0.5], vmin=0, vmax=100)
         plt.xlabel('correct labels')
         plt.ylabel('assigned labels')
         plt.colorbar()
@@ -143,19 +161,20 @@ class Clustering:
         plt.clf()
         plt.close()
     
-    def show_centroids(self):
-        plt.figure(figsize=(len(self.best_clusters), 1))
-        for i in range(len(self.best_clusters)):
-            image = self.best_clusters[i]
+    def show_centroids(self, filename: str, clusters: np.ndarray = None, results_path: str = None):
+        if clusters is None: clusters = self.best_clusters
+        if results_path is None: results_path = self.results_path
+        plt.figure(figsize=(len(clusters), 1))
+        for i in range(len(clusters)):
+            image = clusters[i]
             s = int(math.sqrt(len(image)))
             image = image.reshape((s, s))
-            plt.subplot(1, len(self.best_clusters), i+1)
+            plt.subplot(1, len(clusters), i+1)
             plt.xticks([])
             plt.yticks([])
             plt.grid(False)
             plt.imshow(image)
-            # plt.xlabel(labels[i])
         plt.tight_layout()
-        plt.savefig(os.path.join(self.results_path, 'centroids.png'))
+        plt.savefig(os.path.join(results_path, filename))
         plt.clf()
         plt.close()
